@@ -75,90 +75,20 @@ class IMS:
 
         self.icon_side = PhotoImage(file=os.path.join(IMAGE_DIR, "side.png"))
 
-        btn_employee = Button(
-            LeftMenu, text="Employee", command=self.employee,
-            image=self.icon_side, compound=LEFT,
-            padx=5, anchor="w",
-            font=("times new roman", 20, "bold"),
-            bg="white", bd=3, cursor="hand2"
-        ).pack(side=TOP, fill=X)
-
-        btn_supplier = Button(
-            LeftMenu, text="Supplier", command=self.supplier,
-            image=self.icon_side, compound=LEFT,
-            padx=5, anchor="w",
-            font=("times new roman", 20, "bold"),
-            bg="white", bd=3, cursor="hand2"
-        ).pack(side=TOP, fill=X)
-
-        btn_category = Button(
-            LeftMenu, text="Category", command=self.category,
-            image=self.icon_side, compound=LEFT,
-            padx=5, anchor="w",
-            font=("times new roman", 20, "bold"),
-            bg="white", bd=3, cursor="hand2"
-        ).pack(side=TOP, fill=X)
-
-        btn_product = Button(
-            LeftMenu, text="Products", command=self.product,
-            image=self.icon_side, compound=LEFT,
-            padx=5, anchor="w",
-            font=("times new roman", 20, "bold"),
-            bg="white", bd=3, cursor="hand2"
-        ).pack(side=TOP, fill=X)
-
-        btn_sales = Button(
-            LeftMenu, text="Sales", command=self.sales,
-            image=self.icon_side, compound=LEFT,
-            padx=5, anchor="w",
-            font=("times new roman", 20, "bold"),
-            bg="white", bd=3, cursor="hand2"
-        ).pack(side=TOP, fill=X)
-
-        btn_exit = Button(
-            LeftMenu, text="Exit",
-            image=self.icon_side, compound=LEFT,
-            padx=5, anchor="w",
-            font=("times new roman", 20, "bold"),
-            bg="white", bd=3, cursor="hand2",
-            command=self.root.destroy
-        ).pack(side=TOP, fill=X)
+        #All buttons are created with a helper funciton
+        self.createButton(LeftMenu, "Employee", self.employee)
+        self.createButton(LeftMenu, "Supplier", self.supplier)
+        self.createButton(LeftMenu, "Category", self.category)
+        self.createButton(LeftMenu, "Products", self.product)
+        self.createButton(LeftMenu, "Sales", self.sales)
+        self.createButton(LeftMenu, "Exit", self.root.destroy)
 
         # ----------- content ----------------
-        self.lbl_employee = Label(
-            self.root, text="Total Employee\n{ 0 }",
-            bd=5, relief=RIDGE, bg="#33bbf9",
-            fg="white", font=("goudy old style", 20, "bold")
-        )
-        self.lbl_employee.place(x=300, y=120, height=150, width=300)
-
-        self.lbl_supplier = Label(
-            self.root, text="Total Supplier\n{ 0 }",
-            bd=5, relief=RIDGE, bg="#ff5722",
-            fg="white", font=("goudy old style", 20, "bold")
-        )
-        self.lbl_supplier.place(x=650, y=120, height=150, width=300)
-
-        self.lbl_category = Label(
-            self.root, text="Total Category\n{ 0 }",
-            bd=5, relief=RIDGE, bg="#009688",
-            fg="white", font=("goudy old style", 20, "bold")
-        )
-        self.lbl_category.place(x=1000, y=120, height=150, width=300)
-
-        self.lbl_product = Label(
-            self.root, text="Total Product\n{ 0 }",
-            bd=5, relief=RIDGE, bg="#607d8b",
-            fg="white", font=("goudy old style", 20, "bold")
-        )
-        self.lbl_product.place(x=300, y=300, height=150, width=300)
-
-        self.lbl_sales = Label(
-            self.root, text="Total Sales\n{ 0 }",
-            bd=5, relief=RIDGE, bg="#ffc107",
-            fg="white", font=("goudy old style", 20, "bold")
-        )
-        self.lbl_sales.place(x=650, y=300, height=150, width=300)
+        self.lbl_employee = self.createStatLabel("Total Employee\n{ 0 }", "#33bbf9", 300, 120)
+        self.lbl_supplier = self.createStatLabel("Total Supplier\n{ 0 }", "#ff5722", 650, 120)
+        self.lbl_category = self.createStatLabel("Total Category\n{ 0 }", "#009688", 1000, 120)
+        self.lbl_product = self.createStatLabel("Total Product\n{ 0 }", "#607d8b", 300, 300)
+        self.lbl_sales = self.createStatLabel("Total Sales\n{ 0 }", "#ffc107", 650, 300)
 
         # ------------ footer -----------------
         lbl_footer = Label(
@@ -171,46 +101,62 @@ class IMS:
         self.update_content()
 
     # -------------- functions ----------------
-    def employee(self):
+
+    #The helper function to create the buttons
+    def createButton(self, parent, text, command):
+        Button(
+            parent, text=text, command=command,
+            image=self.icon_side, compound=LEFT,
+            padx=5, anchor="w",
+            font=("times new roman", 20, "bold"),
+            bg="white", bd=3, cursor="hand2"
+        ).pack(side=TOP, fill=X)
+
+    #function to create the labels for the stats
+    def createStatLabel(self, text, bg_color, x, y):
+        label = Label(
+            self.root, text=text,
+            bd=5, relief=RIDGE, bg=bg_color,
+            fg="white", font=("goudy old style", 20, "bold")
+        )
+        label.place(x=x, y=y, height=150, width=300)
+        return label
+
+    #another helper function. Opens a new window when a menu button is clicked
+    def openWindow(self, window_class):
         self.new_win = Toplevel(self.root)
-        self.new_obj = employeeClass(self.new_win)
+        self.new_obj = window_class(self.new_win)
+
+    def employee(self):
+        self.openWindow(employeeClass)
 
     def supplier(self):
-        self.new_win = Toplevel(self.root)
-        self.new_obj = supplierClass(self.new_win)
+        self.openWindow(supplierClass)
 
     def category(self):
-        self.new_win = Toplevel(self.root)
-        self.new_obj = categoryClass(self.new_win)
+        self.openWindow(categoryClass)
 
     def product(self):
-        self.new_win = Toplevel(self.root)
-        self.new_obj = productClass(self.new_win)
+        self.openWindow(productClass)
 
     def sales(self):
-        self.new_win = Toplevel(self.root)
-        self.new_obj = salesClass(self.new_win)
+        self.openWindow(salesClass)
+
+    #Function to update the stat counts on the dashboard
+    def updateStatCount(self, cur, tableName, label, display_name):
+        cur.execute(f"select * from {tableName}")
+        count = len(cur.fetchall())
+        label.config(text=f"Total {display_name}\n[ {count} ]")
 
     def update_content(self):
         con = sqlite3.connect(database=os.path.join(BASE_DIR, 'ims.db'))
         cur = con.cursor()
 
         try:
-            cur.execute("select * from product")
-            product = cur.fetchall()
-            self.lbl_product.config(text=f"Total Product\n[ {len(product)} ]")
-
-            cur.execute("select * from category")
-            category = cur.fetchall()
-            self.lbl_category.config(text=f"Total Category\n[ {len(category)} ]")
-
-            cur.execute("select * from employee")
-            employee = cur.fetchall()
-            self.lbl_employee.config(text=f"Total Employee\n[ {len(employee)} ]")
-
-            cur.execute("select * from supplier")
-            supplier = cur.fetchall()
-            self.lbl_supplier.config(text=f"Total Supplier\n[ {len(supplier)} ]")
+            self.updateStatCount(cur, "product", self.lbl_product, "Product")
+            self.updateStatCount(cur, "category", self.lbl_category, "Category")
+            self.updateStatCount(cur, "employee", self.lbl_employee, "Employee")
+            self.updateStatCount(cur, "supplier", self.lbl_supplier, "Supplier")
 
             bill = len(os.listdir(BILL_DIR))
             self.lbl_sales.config(text=f"Total Sales\n[ {bill} ]")
