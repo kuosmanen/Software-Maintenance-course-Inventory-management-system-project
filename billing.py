@@ -5,6 +5,7 @@ import sqlite3
 import time
 import os
 import tempfile
+from helper_functions import createLabel, createEntry, createButton, createTableWithScrollbars, configureTableColumns
 
 class billClass:
     def __init__(self,root):
@@ -20,7 +21,7 @@ class billClass:
         title=Label(self.root,text="Inventory Management System",image=self.icon_title,compound=LEFT,font=("times new roman",40,"bold"),bg="#010c48",fg="white",anchor="w",padx=20).place(x=0,y=0,relwidth=1,height=70)
 
         #------------ logout button -----------
-        btn_logout=Button(self.root,text="Logout",font=("times new roman",15,"bold"),bg="yellow",cursor="hand2").place(x=1150,y=10,height=50,width=150)
+        createButton(self.root, "Logout", None, "yellow", 1150, 10, 150, 50, font="times new roman", bold=True, fg="black")
 
         #------------ clock -----------------
         self.lbl_clock=Label(self.root,text="Welcome to Inventory Management System\t\t Date: DD:MM:YYYY\t\t Time: HH:MM:SS",font=("times new roman",15),bg="#4d636d",fg="white")
@@ -37,37 +38,27 @@ class billClass:
         ProductFrame2=Frame(ProductFrame1,bd=2,relief=RIDGE,bg="white")
         ProductFrame2.place(x=2,y=42,width=398,height=90)
 
-        lbl_search=Label(ProductFrame2,text="Search Product | By Name",font=("times new roman",15,"bold"),bg="white",fg="green").place(x=2,y=5)
+        createLabel(ProductFrame2, "Search Product | By Name", 2, 5, font="times new roman", bold=True, fg="green")
         
-        lbl_search=Label(ProductFrame2,text="Product Name",font=("times new roman",15,"bold"),bg="white").place(x=2,y=45)
-        txt_search=Entry(ProductFrame2,textvariable=self.var_search,font=("times new roman",15),bg="lightyellow").place(x=128,y=47,width=150,height=22)
-        btn_search=Button(ProductFrame2,text="Search",command=self.search,font=("goudy old style",15),bg="#2196f3",fg="white",cursor="hand2").place(x=285,y=45,width=100,height=25)
-        btn_show_all=Button(ProductFrame2,text="Show All",command=self.show,font=("goudy old style",15),bg="#083531",fg="white",cursor="hand2").place(x=285,y=10,width=100,height=25)
+        createLabel(ProductFrame2, "Product Name", 2, 45, font="times new roman", bold=True)
+        createEntry(ProductFrame2, self.var_search, 128, 47, width=150, height=22, font="times new roman")
+        createButton(ProductFrame2, "Search", self.search, "#2196f3", 285, 45, 100, 25)
+        createButton(ProductFrame2, "Show All", self.show, "#083531", 285, 10, 100, 25)
 
-        ProductFrame3=Frame(ProductFrame1,bd=3,relief=RIDGE)
-        ProductFrame3.place(x=2,y=140,width=398,height=375)
-
-        scrolly=Scrollbar(ProductFrame3,orient=VERTICAL)
-        scrollx=Scrollbar(ProductFrame3,orient=HORIZONTAL)\
+        columns_config = [
+            ("pid", "P ID", 40),
+            ("name", "Name", 100),
+            ("price", "Price", 100),
+            ("qty", "Quantity", 40),
+            ("status", "Status", 90)
+        ]
         
-        self.product_Table=ttk.Treeview(ProductFrame3,columns=("pid","name","price","qty","status"),yscrollcommand=scrolly.set,xscrollcommand=scrollx.set)
-        scrollx.pack(side=BOTTOM,fill=X)
-        scrolly.pack(side=RIGHT,fill=Y)
-        scrollx.config(command=self.product_Table.xview)
-        scrolly.config(command=self.product_Table.yview)
-        self.product_Table.heading("pid",text="P ID")
-        self.product_Table.heading("name",text="Name")
-        self.product_Table.heading("price",text="Price")
-        self.product_Table.heading("qty",text="Quantity")
-        self.product_Table.heading("status",text="Status")
-        self.product_Table["show"]="headings"
-        self.product_Table.column("pid",width=40)
-        self.product_Table.column("name",width=100)
-        self.product_Table.column("price",width=100)
-        self.product_Table.column("qty",width=40)
-        self.product_Table.column("status",width=90)
-        self.product_Table.pack(fill=BOTH,expand=1)
-        self.product_Table.bind("<ButtonRelease-1>",self.get_data)
+        ProductFrame3, self.product_Table = createTableWithScrollbars(
+            ProductFrame1, ("pid", "name", "price", "qty", "status"),
+            2, 140, width=398, height=375
+        )
+        
+        configureTableColumns(self.product_Table, columns_config, self.get_data)
         self.show()
 
         lbl_note=Label(ProductFrame1,text="Note: 'Enter 0 Quantity to remove product from the Cart'",font=("goudy old style",12),anchor="w",bg="white",fg="red").pack(side=BOTTOM,fill=X)
@@ -81,11 +72,11 @@ class billClass:
 
         cTitle=Label(CustomerFrame,text="Customer Details",font=("goudy old style",15),bg="lightgray").pack(side=TOP,fill=X)
 
-        lbl_name=Label(CustomerFrame,text="Name",font=("times new roman",15),bg="white").place(x=5,y=35)
-        txt_name=Entry(CustomerFrame,textvariable=self.var_cname,font=("times new roman",13),bg="lightyellow").place(x=80,y=35,width=180)
+        createLabel(CustomerFrame, "Name", 5, 35, font="times new roman")
+        createEntry(CustomerFrame, self.var_cname, 80, 35, font_size=13, font="times new roman")
         
-        lbl_contact=Label(CustomerFrame,text="Contact No.",font=("times new roman",15),bg="white").place(x=270,y=35)
-        txt_contact=Entry(CustomerFrame,textvariable=self.var_contact,font=("times new roman",15),bg="lightyellow").place(x=380,y=35,width=140)
+        createLabel(CustomerFrame, "Contact No.", 270, 35, font="times new roman")
+        createEntry(CustomerFrame, self.var_contact, 380, 35, width=140, font="times new roman")
 
         Cal_Cart_Frame=Frame(self.root,bd=2,relief=RIDGE,bg="white")
         Cal_Cart_Frame.place(x=420,y=190,width=530,height=360)
@@ -128,6 +119,7 @@ class billClass:
         scrolly=Scrollbar(Cart_Frame,orient=VERTICAL)
         scrollx=Scrollbar(Cart_Frame,orient=HORIZONTAL)\
         
+        #this code uses pack instead of place so it cannot be created with the helper function!!
         self.CartTable=ttk.Treeview(Cart_Frame,columns=("pid","name","price","qty"),yscrollcommand=scrolly.set,xscrollcommand=scrollx.set)
         scrollx.pack(side=BOTTOM,fill=X)
         scrolly.pack(side=RIGHT,fill=Y)
@@ -155,20 +147,20 @@ class billClass:
         Add_CartWidgets_Frame=Frame(self.root,bd=2,relief=RIDGE,bg="white")
         Add_CartWidgets_Frame.place(x=420,y=550,width=530,height=110)
 
-        lbl_p_name=Label(Add_CartWidgets_Frame,text="Product Name",font=("times new roman",15),bg="white").place(x=5,y=5)
-        txt_p_name=Entry(Add_CartWidgets_Frame,textvariable=self.var_pname,font=("times new roman",15),bg="lightyellow",state='readonly').place(x=5,y=35,width=190,height=22)
+        createLabel(Add_CartWidgets_Frame, "Product Name", 5, 5, font="times new roman")
+        createEntry(Add_CartWidgets_Frame, self.var_pname, 5, 35, width=190, height=22, font="times new roman", state='readonly')
 
-        lbl_p_price=Label(Add_CartWidgets_Frame,text="Price Per Qty",font=("times new roman",15),bg="white").place(x=230,y=5)
-        txt_p_price=Entry(Add_CartWidgets_Frame,textvariable=self.var_price,font=("times new roman",15),bg="lightyellow",state='readonly').place(x=230,y=35,width=150,height=22)
+        createLabel(Add_CartWidgets_Frame, "Price Per Qty", 230, 5, font="times new roman")
+        createEntry(Add_CartWidgets_Frame, self.var_price, 230, 35, width=150, height=22, font="times new roman", state='readonly')
 
-        lbl_p_qty=Label(Add_CartWidgets_Frame,text="Quantity",font=("times new roman",15),bg="white").place(x=390,y=5)
-        txt_p_qty=Entry(Add_CartWidgets_Frame,textvariable=self.var_qty,font=("times new roman",15),bg="lightyellow").place(x=390,y=35,width=120,height=22)
+        createLabel(Add_CartWidgets_Frame, "Quantity", 390, 5, font="times new roman")
+        createEntry(Add_CartWidgets_Frame, self.var_qty, 390, 35, width=120, height=22, font="times new roman")
 
         self.lbl_inStock=Label(Add_CartWidgets_Frame,text="In Stock",font=("times new roman",15),bg="white")
         self.lbl_inStock.place(x=5,y=70)
 
-        btn_clear_cart=Button(Add_CartWidgets_Frame,command=self.clear_cart,text="Clear",font=("times new roman",15,"bold"),bg="lightgray",cursor="hand2").place(x=180,y=70,width=150,height=30)
-        btn_add_cart=Button(Add_CartWidgets_Frame,command=self.add_update_cart,text="Add | Update",font=("times new roman",15,"bold"),bg="orange",cursor="hand2").place(x=340,y=70,width=180,height=30)
+        createButton(Add_CartWidgets_Frame, "Clear", self.clear_cart, "lightgray", 180, 70, 150, 30, font="times new roman", bold=True)
+        createButton(Add_CartWidgets_Frame, "Add | Update", self.add_update_cart, "orange", 340, 70, 180, 30, font="times new roman", bold=True)
         
         #------------------- billing area -------------------
         billFrame=Frame(self.root,bd=2,relief=RIDGE,bg="white")
@@ -195,14 +187,9 @@ class billClass:
         self.lbl_net_pay=Label(billMenuFrame,text="Net Pay\n[0]",font=("goudy old style",15,"bold"),bg="#607d8b",fg="white")
         self.lbl_net_pay.place(x=246,y=5,width=160,height=70)
 
-        btn_print=Button(billMenuFrame,text="Print",command=self.print_bill,cursor="hand2",font=("goudy old style",15,"bold"),bg="lightgreen",fg="white")
-        btn_print.place(x=2,y=80,width=120,height=50)
-
-        btn_clear_all=Button(billMenuFrame,text="Clear All",command=self.clear_all,cursor="hand2",font=("goudy old style",15,"bold"),bg="gray",fg="white")
-        btn_clear_all.place(x=124,y=80,width=120,height=50)
-
-        btn_generate=Button(billMenuFrame,text="Generate Bill",command=self.generate_bill,cursor="hand2",font=("goudy old style",15,"bold"),bg="#009688",fg="white")
-        btn_generate.place(x=246,y=80,width=160,height=50)
+        createButton(billMenuFrame, "Print", self.print_bill, "lightgreen", 2, 80, 120, 50, bold=True)
+        createButton(billMenuFrame, "Clear All", self.clear_all, "gray", 124, 80, 120, 50, bold=True)
+        createButton(billMenuFrame, "Generate Bill", self.generate_bill, "#009688", 246, 80, 160, 50, bold=True)
 
         self.show()
         #self.bill_top()
