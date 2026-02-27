@@ -2,7 +2,7 @@ from tkinter import*
 from PIL import Image,ImageTk
 from tkinter import ttk,messagebox
 import sqlite3
-from helper_functions import createLabel, createButton, createTableWithScrollbars, configureTableColumns
+from helper_functions import createLabel, createEntry, createButton, createTableWithScrollbars, configureTableColumns
 
 class productClass:
     def __init__(self,root):
@@ -47,9 +47,9 @@ class productClass:
         cmb_sup.place(x=150,y=110,width=200)
         cmb_sup.current(0)
         
-        txt_name=Entry(product_Frame,textvariable=self.var_name,font=("goudy old style",15),bg="lightyellow").place(x=150,y=160,width=200)
-        txt_price=Entry(product_Frame,textvariable=self.var_price,font=("goudy old style",15),bg="lightyellow").place(x=150,y=210,width=200)
-        txt_qty=Entry(product_Frame,textvariable=self.var_qty,font=("goudy old style",15),bg="lightyellow").place(x=150,y=260,width=200)
+        createEntry(product_Frame, self.var_name, 150, 160, width=200)
+        createEntry(product_Frame, self.var_price, 150, 210, width=200)
+        createEntry(product_Frame, self.var_qty, 150, 260, width=200)
 
         cmb_status=ttk.Combobox(product_Frame,textvariable=self.var_status,values=("Active","Inactive"),state='readonly',justify=CENTER,font=("goudy old style",15))
         cmb_status.place(x=150,y=310,width=200)
@@ -70,6 +70,7 @@ class productClass:
         cmb_search.place(x=10,y=10,width=180)
         cmb_search.current(0)
 
+        #no width specified so helper cannot be used!
         txt_search=Entry(SearchFrame,textvariable=self.var_searchtxt,font=("goudy old style",15),bg="lightyellow").place(x=200,y=10)
         createButton(SearchFrame, "Search", self.search, "#4caf50", 410, 9, 150, 30)
 

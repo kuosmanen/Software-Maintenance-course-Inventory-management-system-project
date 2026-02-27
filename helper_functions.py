@@ -7,16 +7,20 @@ from tkinter import ttk
 
 
 #Create a styled label
-def createLabel(root, text, x, y, font_size=15):
-    Label(root, text=text, font=("goudy old style",font_size), bg="white").place(x=x, y=y)
+def createLabel(root, text, x, y, font_size=15, font="goudy old style"):
+    Label(root, text=text, font=(font, font_size), bg="white").place(x=x, y=y)
 
 #Create a styled entry
-def createEntry(root, textvariable, x, y):
-    Entry(root, textvariable=textvariable, font=("goudy old style",15), bg="lightyellow").place(x=x, y=y, width=180)
+def createEntry(root, textvariable, x, y, width=180, height=None, font_size=15, font="goudy old style"):
+    Entry(root, textvariable=textvariable, font=(font, font_size), bg="lightyellow").place(x=x, y=y, width=width, height=height)
 
 #Create a styled button
-def createButton(root, text, command, bg, x, y, width, height):
-    Button(root, text=text, command=command, font=("goudy old style",15), bg=bg, fg="white", cursor="hand2").place(x=x, y=y, width=width, height=height)
+def createButton(root, text, command, bg, x, y, width, height, font_size=15, font="goudy old style", bold=False):
+    if bold:
+        final_font = (font, font_size, "bold")
+    else:
+        final_font = (font, font_size)
+    Button(root, text=text, command=command, font=final_font, bg=bg, fg="white", cursor="hand2").place(x=x, y=y, width=width, height=height)
 
 
 #Create a table with scrollbars
