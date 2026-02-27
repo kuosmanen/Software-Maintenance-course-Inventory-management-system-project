@@ -12,11 +12,9 @@ class supplierClass:
         self.root.focus_force()
 
         #------------ all variables --------------
-        self.var_searchby=StringVar()
-        self.var_searchtxt=StringVar()
-        self.var_sup_invoice=StringVar()
-        self.var_name=StringVar()
-        self.var_contact=StringVar()
+        var_names = ['searchby', 'searchtxt', 'sup_invoice', 'name', 'contact']
+        for var in var_names:
+            setattr(self, f'var_{var}', StringVar())
         
         
         #---------- Search Frame -------------
@@ -31,27 +29,27 @@ class supplierClass:
 
         #-------------- content ---------------
         #---------- row 1 ----------------
-        lbl_supplier_invoice=Label(self.root,text="Invoice No.",font=("goudy old style",15),bg="white").place(x=50,y=80)
-        txt_supplier_invoice=Entry(self.root,textvariable=self.var_sup_invoice,font=("goudy old style",15),bg="lightyellow").place(x=180,y=80,width=180)
+        self.createLabel("Invoice No.", 50, 80)
+        self.createEntry(self.var_sup_invoice, 180, 80)
         
         #---------- row 2 ----------------
-        lbl_name=Label(self.root,text="Name",font=("goudy old style",15),bg="white").place(x=50,y=120)
-        txt_name=Entry(self.root,textvariable=self.var_name,font=("goudy old style",15),bg="lightyellow").place(x=180,y=120,width=180)
+        self.createLabel("Name", 50, 120)
+        self.createEntry(self.var_name, 180, 120)
         
         #---------- row 3 ----------------
-        lbl_contact=Label(self.root,text="Contact",font=("goudy old style",15),bg="white").place(x=50,y=160)
-        txt_contact=Entry(self.root,textvariable=self.var_contact,font=("goudy old style",15),bg="lightyellow").place(x=180,y=160,width=180)
+        self.createLabel("Contact", 50, 160)
+        self.createEntry(self.var_contact, 180, 160)
         
         #---------- row 4 ----------------
-        lbl_desc=Label(self.root,text="Description",font=("goudy old style",15),bg="white").place(x=50,y=200)
+        self.createLabel("Description", 50, 200)
         self.txt_desc=Text(self.root,font=("goudy old style",15),bg="lightyellow")
         self.txt_desc.place(x=180,y=200,width=470,height=120)
         
         #-------------- buttons -----------------
-        btn_add=Button(self.root,text="Save",command=self.add,font=("goudy old style",15),bg="#2196f3",fg="white",cursor="hand2").place(x=180,y=370,width=110,height=35)
-        btn_update=Button(self.root,text="Update",command=self.update,font=("goudy old style",15),bg="#4caf50",fg="white",cursor="hand2").place(x=300,y=370,width=110,height=35)
-        btn_delete=Button(self.root,text="Delete",command=self.delete,font=("goudy old style",15),bg="#f44336",fg="white",cursor="hand2").place(x=420,y=370,width=110,height=35)
-        btn_clear=Button(self.root,text="Clear",command=self.clear,font=("goudy old style",15),bg="#607d8b",fg="white",cursor="hand2").place(x=540,y=370,width=110,height=35)
+        self.createButton("Save", self.add, "#2196f3", 180, 370, 110, 35)
+        self.createButton("Update", self.update, "#4caf50", 300, 370, 110, 35)
+        self.createButton("Delete", self.delete, "#f44336", 420, 370, 110, 35)
+        self.createButton("Clear", self.clear, "#607d8b", 540, 370, 110, 35)
 
         #------------ supplier details -------------
         sup_frame=Frame(self.root,bd=3,relief=RIDGE)
@@ -65,20 +63,34 @@ class supplierClass:
         scrolly.pack(side=RIGHT,fill=Y)
         scrollx.config(command=self.SupplierTable.xview)
         scrolly.config(command=self.SupplierTable.yview)
-        self.SupplierTable.heading("invoice",text="Invoice")
-        self.SupplierTable.heading("name",text="Name")
-        self.SupplierTable.heading("contact",text="Contact")
-        self.SupplierTable.heading("desc",text="Description")
-        self.SupplierTable["show"]="headings"
-        self.SupplierTable.column("invoice",width=90)
-        self.SupplierTable.column("name",width=100)
-        self.SupplierTable.column("contact",width=100)
-        self.SupplierTable.column("desc",width=100)
         
+        #Column configuration
+        columns_config = [
+            ("invoice", "Invoice", 90),
+            ("name", "Name", 100),
+            ("contact", "Contact", 100),
+            ("desc", "Description", 100)
+        ]
+        
+        for col_id, col_text, col_width in columns_config:
+            self.SupplierTable.heading(col_id, text=col_text)
+            self.SupplierTable.column(col_id, width=col_width)
+        
+        self.SupplierTable["show"]="headings"
         self.SupplierTable.pack(fill=BOTH,expand=1)
         self.SupplierTable.bind("<ButtonRelease-1>",self.get_data)
         self.show()
 #-----------------------------------------------------------------------------------------------------
+    #Helper methods for UI creation
+    def createLabel(self, text, x, y):
+        Label(self.root, text=text, font=("goudy old style",15), bg="white").place(x=x, y=y)
+    
+    def createEntry(self, textvariable, x, y):
+        Entry(self.root, textvariable=textvariable, font=("goudy old style",15), bg="lightyellow").place(x=x, y=y, width=180)
+    
+    def createButton(self, text, command, bg, x, y, width, height):
+        Button(self.root, text=text, command=command, font=("goudy old style",15), bg=bg, fg="white", cursor="hand2").place(x=x, y=y, width=width, height=height)
+
     def add(self):
         con=sqlite3.connect(database=r'ims.db')
         cur=con.cursor()
