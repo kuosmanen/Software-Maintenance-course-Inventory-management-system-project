@@ -1,4 +1,4 @@
-from tkinter import Label, Entry, Button, Frame, Scrollbar, VERTICAL, HORIZONTAL, BOTTOM, RIGHT, X, Y, RIDGE
+from tkinter import Label, Entry, Button, Frame, Scrollbar, VERTICAL, HORIZONTAL, BOTTOM, RIGHT, X, Y, RIDGE, BOTH
 from tkinter import ttk
 
 
@@ -37,3 +37,14 @@ def createTableWithScrollbars(root, columns, x, y, width=None, height=None, relw
     scrolly.config(command=table.yview)
     
     return frame, table
+
+#Configure table columns
+def configureTableColumns(table, columns_config, bind):
+    for col_id, col_text, col_width in columns_config:
+        table.heading(col_id, text=col_text)
+        table.column(col_id, width=col_width)
+    
+    table["show"]="headings"
+    
+    table.pack(fill=BOTH,expand=1)
+    table.bind("<ButtonRelease-1>",bind)

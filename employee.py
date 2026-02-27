@@ -2,7 +2,7 @@ from tkinter import*
 from PIL import Image,ImageTk
 from tkinter import ttk,messagebox
 import sqlite3
-from helper_functions import createLabel, createEntry, createButton, createTableWithScrollbars
+from helper_functions import createLabel, createEntry, createButton, createTableWithScrollbars, configureTableColumns
 
 class employeeClass:
     def __init__(self,root):
@@ -96,15 +96,7 @@ class employeeClass:
         
         emp_frame, self.EmployeeTable = createTableWithScrollbars(self.root, ("eid", "name", "email", "gender", "contact", "dob", "doj", "pass", "utype", "address", "salary"), 0, 350, height=150, relwidth=1)
         
-        #Configure columns
-        for col_id, heading, width in columns:
-            self.EmployeeTable.heading(col_id, text=heading)
-            self.EmployeeTable.column(col_id, width=width)
-        
-        self.EmployeeTable["show"]="headings"
-        
-        self.EmployeeTable.pack(fill=BOTH,expand=1)
-        self.EmployeeTable.bind("<ButtonRelease-1>",self.get_data)
+        configureTableColumns(self.EmployeeTable, columns, self.get_data)
         self.show()
 #-----------------------------------------------------------------------------------------------------
     def add(self):

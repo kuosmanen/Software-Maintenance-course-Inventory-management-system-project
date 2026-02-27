@@ -2,7 +2,7 @@ from tkinter import*
 from PIL import Image,ImageTk
 from tkinter import ttk,messagebox
 import sqlite3
-from helper_functions import createLabel, createEntry, createButton, createTableWithScrollbars
+from helper_functions import createLabel, createEntry, createButton, createTableWithScrollbars, configureTableColumns
 
 class supplierClass:
     def __init__(self,root):
@@ -64,14 +64,7 @@ class supplierClass:
             self.root, ("invoice", "name", "contact", "desc"), 700, 120, width=380, height=350
         )
         
-        # Configure columns
-        for col_id, col_text, col_width in columns_config:
-            self.SupplierTable.heading(col_id, text=col_text)
-            self.SupplierTable.column(col_id, width=col_width)
-        
-        self.SupplierTable["show"]="headings"
-        self.SupplierTable.pack(fill=BOTH,expand=1)
-        self.SupplierTable.bind("<ButtonRelease-1>",self.get_data)
+        configureTableColumns(self.SupplierTable, columns_config, self.get_data)
         self.show()
 #-----------------------------------------------------------------------------------------------------
     def add(self):
