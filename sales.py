@@ -3,6 +3,7 @@ from PIL import Image, ImageTk
 from tkinter import ttk, messagebox
 import sqlite3
 import os
+from helper_functions import createLabel, createEntry, createButton
 
 # ------------------ BASE PATH SETUP ------------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -34,25 +35,15 @@ class salesClass:
             relief=RIDGE
         ).pack(side=TOP, fill=X, padx=10, pady=20)
 
-        lbl_invoice = Label(self.root, text="Invoice No.", font=("times new roman", 15), bg="white")
-        lbl_invoice.place(x=50, y=100)
+        createLabel(self.root, "Invoice No.", 50, 100, font="times new roman")
 
-        txt_invoice = Entry(self.root, textvariable=self.var_invoice, font=("times new roman", 15), bg="lightyellow")
-        txt_invoice.place(x=160, y=100, width=180, height=28)
+        createEntry(self.root, self.var_invoice, 160, 100, height=28, font="times new roman")
 
-        btn_search = Button(
-            self.root, text="Search", command=self.search,
-            font=("times new roman", 15, "bold"),
-            bg="#2196f3", fg="white", cursor="hand2"
-        ).place(x=360, y=100, width=120, height=28)
-
-        btn_clear = Button(
-            self.root, text="Clear", command=self.clear,
-            font=("times new roman", 15, "bold"),
-            bg="lightgray", cursor="hand2"
-        ).place(x=490, y=100, width=120, height=28)
+        createButton(self.root, "Search", self.search, "#2196f3", 360, 100, 120, 28, font="times new roman", bold=True)
+        createButton(self.root, "Clear", self.clear, "lightgray", 490, 100, 120, 28, font="times new roman", bold=True)
 
         # ----------------- bill list -------------------
+        #these are too different to be created with the helper function, so they are created here
         sales_Frame = Frame(self.root, bd=3, relief=RIDGE)
         sales_Frame.place(x=50, y=140, width=200, height=330)
 
