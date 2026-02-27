@@ -2,6 +2,7 @@ from tkinter import*
 from PIL import Image,ImageTk
 from tkinter import ttk,messagebox
 import sqlite3
+from helper_functions import createLabel, createEntry, createButton, createTableWithScrollbars
 
 class supplierClass:
     def __init__(self,root):
@@ -29,42 +30,29 @@ class supplierClass:
 
         #-------------- content ---------------
         #---------- row 1 ----------------
-        self.createLabel("Invoice No.", 50, 80)
-        self.createEntry(self.var_sup_invoice, 180, 80)
+        createLabel(self.root, "Invoice No.", 50, 80)
+        createEntry(self.root, self.var_sup_invoice, 180, 80)
         
         #---------- row 2 ----------------
-        self.createLabel("Name", 50, 120)
-        self.createEntry(self.var_name, 180, 120)
+        createLabel(self.root, "Name", 50, 120)
+        createEntry(self.root, self.var_name, 180, 120)
         
         #---------- row 3 ----------------
-        self.createLabel("Contact", 50, 160)
-        self.createEntry(self.var_contact, 180, 160)
+        createLabel(self.root, "Contact", 50, 160)
+        createEntry(self.root, self.var_contact, 180, 160)
         
         #---------- row 4 ----------------
-        self.createLabel("Description", 50, 200)
+        createLabel(self.root, "Description", 50, 200)
         self.txt_desc=Text(self.root,font=("goudy old style",15),bg="lightyellow")
         self.txt_desc.place(x=180,y=200,width=470,height=120)
         
         #-------------- buttons -----------------
-        self.createButton("Save", self.add, "#2196f3", 180, 370, 110, 35)
-        self.createButton("Update", self.update, "#4caf50", 300, 370, 110, 35)
-        self.createButton("Delete", self.delete, "#f44336", 420, 370, 110, 35)
-        self.createButton("Clear", self.clear, "#607d8b", 540, 370, 110, 35)
+        createButton(self.root, "Save", self.add, "#2196f3", 180, 370, 110, 35)
+        createButton(self.root, "Update", self.update, "#4caf50", 300, 370, 110, 35)
+        createButton(self.root, "Delete", self.delete, "#f44336", 420, 370, 110, 35)
+        createButton(self.root, "Clear", self.clear, "#607d8b", 540, 370, 110, 35)
 
         #------------ supplier details -------------
-        sup_frame=Frame(self.root,bd=3,relief=RIDGE)
-        sup_frame.place(x=700,y=120,width=380,height=350)
-
-        scrolly=Scrollbar(sup_frame,orient=VERTICAL)
-        scrollx=Scrollbar(sup_frame,orient=HORIZONTAL)\
-        
-        self.SupplierTable=ttk.Treeview(sup_frame,columns=("invoice","name","contact","desc"),yscrollcommand=scrolly.set,xscrollcommand=scrollx.set)
-        scrollx.pack(side=BOTTOM,fill=X)
-        scrolly.pack(side=RIGHT,fill=Y)
-        scrollx.config(command=self.SupplierTable.xview)
-        scrolly.config(command=self.SupplierTable.yview)
-        
-        #Column configuration
         columns_config = [
             ("invoice", "Invoice", 90),
             ("name", "Name", 100),
@@ -72,6 +60,11 @@ class supplierClass:
             ("desc", "Description", 100)
         ]
         
+        sup_frame, self.SupplierTable = createTableWithScrollbars(
+            self.root, ("invoice", "name", "contact", "desc"), 700, 120, width=380, height=350
+        )
+        
+        # Configure columns
         for col_id, col_text, col_width in columns_config:
             self.SupplierTable.heading(col_id, text=col_text)
             self.SupplierTable.column(col_id, width=col_width)
@@ -81,16 +74,6 @@ class supplierClass:
         self.SupplierTable.bind("<ButtonRelease-1>",self.get_data)
         self.show()
 #-----------------------------------------------------------------------------------------------------
-    #Helper methods for UI creation
-    def createLabel(self, text, x, y):
-        Label(self.root, text=text, font=("goudy old style",15), bg="white").place(x=x, y=y)
-    
-    def createEntry(self, textvariable, x, y):
-        Entry(self.root, textvariable=textvariable, font=("goudy old style",15), bg="lightyellow").place(x=x, y=y, width=180)
-    
-    def createButton(self, text, command, bg, x, y, width, height):
-        Button(self.root, text=text, command=command, font=("goudy old style",15), bg=bg, fg="white", cursor="hand2").place(x=x, y=y, width=width, height=height)
-
     def add(self):
         con=sqlite3.connect(database=r'ims.db')
         cur=con.cursor()
