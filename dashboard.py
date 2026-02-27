@@ -76,12 +76,12 @@ class IMS:
         self.icon_side = PhotoImage(file=os.path.join(IMAGE_DIR, "side.png"))
 
         #All buttons are created with a helper funciton
-        self.createButton(LeftMenu, "Employee", self.employee)
-        self.createButton(LeftMenu, "Supplier", self.supplier)
-        self.createButton(LeftMenu, "Category", self.category)
-        self.createButton(LeftMenu, "Products", self.product)
-        self.createButton(LeftMenu, "Sales", self.sales)
-        self.createButton(LeftMenu, "Exit", self.root.destroy)
+        self.createDashboardButton(LeftMenu, "Employee", self.employee)
+        self.createDashboardButton(LeftMenu, "Supplier", self.supplier)
+        self.createDashboardButton(LeftMenu, "Category", self.category)
+        self.createDashboardButton(LeftMenu, "Products", self.product)
+        self.createDashboardButton(LeftMenu, "Sales", self.sales)
+        self.createDashboardButton(LeftMenu, "Exit", self.root.destroy)
 
         # ----------- content ----------------
         self.lbl_employee = self.createStatLabel("Total Employee\n{ 0 }", "#33bbf9", 300, 120)
@@ -103,7 +103,7 @@ class IMS:
     # -------------- functions ----------------
 
     #The helper function to create the buttons
-    def createButton(self, parent, text, command):
+    def createDashboardButton(self, parent, text, command):
         Button(
             parent, text=text, command=command,
             image=self.icon_side, compound=LEFT,
