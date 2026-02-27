@@ -2,6 +2,7 @@ from tkinter import*
 from PIL import Image,ImageTk
 from tkinter import ttk,messagebox
 import sqlite3
+from helper_functions import createLabel, createButton, createTableWithScrollbars, configureTableColumns
 
 class productClass:
     def __init__(self,root):
@@ -31,12 +32,12 @@ class productClass:
         #------------ title --------------
         title=Label(product_Frame,text="Manage Product Details",font=("goudy old style",18),bg="#0f4d7d",fg="white").pack(side=TOP,fill=X)
 
-        lbl_category=Label(product_Frame,text="Category",font=("goudy old style",18),bg="white").place(x=30,y=60)
-        lbl_supplier=Label(product_Frame,text="Supplier",font=("goudy old style",18),bg="white").place(x=30,y=110)
-        lbl_product_name=Label(product_Frame,text="Name",font=("goudy old style",18),bg="white").place(x=30,y=160)
-        lbl_price=Label(product_Frame,text="Price",font=("goudy old style",18),bg="white").place(x=30,y=210)
-        lbl_qty=Label(product_Frame,text="Quantity",font=("goudy old style",18),bg="white").place(x=30,y=260)
-        lbl_status=Label(product_Frame,text="Status",font=("goudy old style",18),bg="white").place(x=30,y=310)
+        createLabel(product_Frame, "Category", 30, 60, font_size=18)
+        createLabel(product_Frame, "Supplier", 30, 110, font_size=18)
+        createLabel(product_Frame, "Name", 30, 160, font_size=18)
+        createLabel(product_Frame, "Price", 30, 210, font_size=18)
+        createLabel(product_Frame, "Quantity", 30, 260, font_size=18)
+        createLabel(product_Frame, "Status", 30, 310, font_size=18)
 
         cmb_cat=ttk.Combobox(product_Frame,textvariable=self.var_cat,values=self.cat_list,state='readonly',justify=CENTER,font=("goudy old style",15))
         cmb_cat.place(x=150,y=60,width=200)
@@ -45,7 +46,7 @@ class productClass:
         cmb_sup=ttk.Combobox(product_Frame,textvariable=self.var_sup,values=self.sup_list,state='readonly',justify=CENTER,font=("goudy old style",15))
         cmb_sup.place(x=150,y=110,width=200)
         cmb_sup.current(0)
-
+        
         txt_name=Entry(product_Frame,textvariable=self.var_name,font=("goudy old style",15),bg="lightyellow").place(x=150,y=160,width=200)
         txt_price=Entry(product_Frame,textvariable=self.var_price,font=("goudy old style",15),bg="lightyellow").place(x=150,y=210,width=200)
         txt_qty=Entry(product_Frame,textvariable=self.var_qty,font=("goudy old style",15),bg="lightyellow").place(x=150,y=260,width=200)
@@ -55,10 +56,10 @@ class productClass:
         cmb_status.current(0)
 
         #-------------- buttons -----------------
-        btn_add=Button(product_Frame,text="Save",command=self.add,font=("goudy old style",15),bg="#2196f3",fg="white",cursor="hand2").place(x=10,y=400,width=100,height=40)
-        btn_update=Button(product_Frame,text="Update",command=self.update,font=("goudy old style",15),bg="#4caf50",fg="white",cursor="hand2").place(x=120,y=400,width=100,height=40)
-        btn_delete=Button(product_Frame,text="Delete",command=self.delete,font=("goudy old style",15),bg="#f44336",fg="white",cursor="hand2").place(x=230,y=400,width=100,height=40)
-        btn_clear=Button(product_Frame,text="Clear",command=self.clear,font=("goudy old style",15),bg="#607d8b",fg="white",cursor="hand2").place(x=340,y=400,width=100,height=40)
+        createButton(product_Frame, "Save", self.add, "#2196f3", 10, 400, 100, 40)
+        createButton(product_Frame, "Update", self.update, "#4caf50", 120, 400, 100, 40)
+        createButton(product_Frame, "Delete", self.delete, "#f44336", 230, 400, 100, 40)
+        createButton(product_Frame, "Clear", self.clear, "#607d8b", 340, 400, 100, 40)
 
         #---------- Search Frame -------------
         SearchFrame=LabelFrame(self.root,text="Search Product",font=("goudy old style",12,"bold"),bd=2,relief=RIDGE,bg="white")
@@ -70,38 +71,22 @@ class productClass:
         cmb_search.current(0)
 
         txt_search=Entry(SearchFrame,textvariable=self.var_searchtxt,font=("goudy old style",15),bg="lightyellow").place(x=200,y=10)
-        btn_search=Button(SearchFrame,text="Search",command=self.search,font=("goudy old style",15),bg="#4caf50",fg="white",cursor="hand2").place(x=410,y=9,width=150,height=30)
+        createButton(SearchFrame, "Search", self.search, "#4caf50", 410, 9, 150, 30)
 
         #------------ product details -------------
-        product_frame=Frame(self.root,bd=3,relief=RIDGE)
-        product_frame.place(x=480,y=100,width=600,height=390)
-
-        scrolly=Scrollbar(product_frame,orient=VERTICAL)
-        scrollx=Scrollbar(product_frame,orient=HORIZONTAL)\
+        columns_config = [
+            ("pid", "P ID", 90),
+            ("Category", "Category", 100),
+            ("Supplier", "Suppler", 100),
+            ("name", "Name", 100),
+            ("price", "Price", 100),
+            ("qty", "Quantity", 100),
+            ("status", "Status", 100)
+        ]
         
-        self.ProductTable=ttk.Treeview(product_frame,columns=("pid","Category","Supplier","name","price","qty","status"),yscrollcommand=scrolly.set,xscrollcommand=scrollx.set)
-        scrollx.pack(side=BOTTOM,fill=X)
-        scrolly.pack(side=RIGHT,fill=Y)
-        scrollx.config(command=self.ProductTable.xview)
-        scrolly.config(command=self.ProductTable.yview)
-        self.ProductTable.heading("pid",text="P ID")
-        self.ProductTable.heading("Category",text="Category")
-        self.ProductTable.heading("Supplier",text="Suppler")
-        self.ProductTable.heading("name",text="Name")
-        self.ProductTable.heading("price",text="Price")
-        self.ProductTable.heading("qty",text="Quantity")
-        self.ProductTable.heading("status",text="Status")
-        self.ProductTable["show"]="headings"
-        self.ProductTable.column("pid",width=90)
-        self.ProductTable.column("Category",width=100)
-        self.ProductTable.column("Supplier",width=100)
-        self.ProductTable.column("name",width=100)
-        self.ProductTable.column("price",width=100)
-        self.ProductTable.column("qty",width=100)
-        self.ProductTable.column("status",width=100)
+        product_frame, self.ProductTable = createTableWithScrollbars(self.root, ("pid", "Category", "Supplier", "name", "price", "qty", "status"),480, 100, width=600, height=390)
         
-        self.ProductTable.pack(fill=BOTH,expand=1)
-        self.ProductTable.bind("<ButtonRelease-1>",self.get_data)
+        configureTableColumns(self.ProductTable, columns_config, self.get_data)
         self.show()
         self.fetch_cat_sup()
 #-----------------------------------------------------------------------------------------------------
