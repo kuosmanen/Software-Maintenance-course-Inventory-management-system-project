@@ -7,8 +7,8 @@ from tkinter import ttk
 
 
 #Create a styled label
-def createLabel(root, text, x, y):
-    Label(root, text=text, font=("goudy old style",15), bg="white").place(x=x, y=y)
+def createLabel(root, text, x, y, font_size=15):
+    Label(root, text=text, font=("goudy old style",font_size), bg="white").place(x=x, y=y)
 
 #Create a styled entry
 def createEntry(root, textvariable, x, y):
@@ -45,6 +45,6 @@ def configureTableColumns(table, columns_config, bind):
         table.column(col_id, width=col_width)
     
     table["show"]="headings"
-    
+
     table.pack(fill=BOTH,expand=1)
     table.bind("<ButtonRelease-1>",bind)

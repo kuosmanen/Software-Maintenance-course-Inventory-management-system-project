@@ -2,7 +2,7 @@ from tkinter import*
 from PIL import Image,ImageTk
 from tkinter import ttk,messagebox
 import sqlite3
-from helper_functions import createTableWithScrollbars, configureTableColumns, createButton
+from helper_functions import createLabel, createTableWithScrollbars, configureTableColumns, createButton
 
 class categoryClass:
     def __init__(self,root):
@@ -18,8 +18,7 @@ class categoryClass:
         #--------------- title ---------------------
         lbl_title=Label(self.root,text="Manage Product Category",font=("goudy old style",30),bg="#184a45",fg="white",bd=3,relief=RIDGE).pack(side=TOP,fill=X,padx=10,pady=20)
         
-        #these use a different font size than the rest of the labels, so they should not be created with the helper function!
-        lbl_mame=Label(self.root,text="Enter Category Name",font=("goudy old style",30),bg="white").place(x=50,y=100)
+        createLabel(self.root,"Enter Category Name", 50, 100, font_size=30)
         txt_mame=Entry(self.root,textvariable=self.var_name,bg="lightyellow",font=("goudy old style",18)).place(x=50,y=170,width=300)
 
         createButton(self.root, "ADD", self.add, "#4caf50", 360, 170, 150, 30)
