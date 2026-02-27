@@ -2,6 +2,7 @@ from tkinter import*
 from PIL import Image,ImageTk
 from tkinter import ttk,messagebox
 import sqlite3
+from helper_functions import createTableWithScrollbars, configureTableColumns, createButton
 
 class categoryClass:
     def __init__(self,root):
@@ -17,32 +18,24 @@ class categoryClass:
         #--------------- title ---------------------
         lbl_title=Label(self.root,text="Manage Product Category",font=("goudy old style",30),bg="#184a45",fg="white",bd=3,relief=RIDGE).pack(side=TOP,fill=X,padx=10,pady=20)
         
+        #these use a different font size than the rest of the labels, so they should not be created with the helper function!
         lbl_mame=Label(self.root,text="Enter Category Name",font=("goudy old style",30),bg="white").place(x=50,y=100)
         txt_mame=Entry(self.root,textvariable=self.var_name,bg="lightyellow",font=("goudy old style",18)).place(x=50,y=170,width=300)
 
-        btn_add=Button(self.root,text="ADD",command=self.add,font=("goudy old style",15),bg="#4caf50",fg="white",cursor="hand2").place(x=360,y=170,width=150,height=30)
-        btn_delete=Button(self.root,text="Delete",command=self.delete,font=("goudy old style",15),bg="red",fg="white",cursor="hand2").place(x=520,y=170,width=150,height=30)
+        createButton(self.root, "ADD", self.add, "#4caf50", 360, 170, 150, 30)
+        createButton(self.root, "Delete", self.delete, "red", 520, 170, 150, 30)
 
         #------------ category details -------------
-        cat_frame=Frame(self.root,bd=3,relief=RIDGE)
-        cat_frame.place(x=700,y=100,width=380,height=100)
-
-        scrolly=Scrollbar(cat_frame,orient=VERTICAL)
-        scrollx=Scrollbar(cat_frame,orient=HORIZONTAL)\
+        columns_config = [
+            ("cid", "C ID", 90),
+            ("name", "Name", 100)
+        ]
         
-        self.CategoryTable=ttk.Treeview(cat_frame,columns=("cid","name"),yscrollcommand=scrolly.set,xscrollcommand=scrollx.set)
-        scrollx.pack(side=BOTTOM,fill=X)
-        scrolly.pack(side=RIGHT,fill=Y)
-        scrollx.config(command=self.CategoryTable.xview)
-        scrolly.config(command=self.CategoryTable.yview)
-        self.CategoryTable.heading("cid",text="C ID")
-        self.CategoryTable.heading("name",text="Name")
-        self.CategoryTable["show"]="headings"
-        self.CategoryTable.column("cid",width=90)
-        self.CategoryTable.column("name",width=100)
+        cat_frame, self.CategoryTable = createTableWithScrollbars(
+            self.root, ("cid", "name"), 700, 100, width=380, height=100
+        )
         
-        self.CategoryTable.pack(fill=BOTH,expand=1)
-        self.CategoryTable.bind("<ButtonRelease-1>",self.get_data)
+        configureTableColumns(self.CategoryTable, columns_config, self.get_data)
         self.show()
 
         #----------------- images ---------------------
