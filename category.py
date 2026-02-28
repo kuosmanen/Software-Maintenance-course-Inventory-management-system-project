@@ -2,7 +2,7 @@ from tkinter import*
 from PIL import Image,ImageTk
 from tkinter import ttk,messagebox
 import sqlite3
-from helper_functions import createLabel, createTableWithScrollbars, configureTableColumns, createButton
+from helper_functions import createLabel, createEntry, createTableWithScrollbars, configureTableColumns, createButton
 
 class categoryClass:
     def __init__(self,root):
@@ -16,10 +16,11 @@ class categoryClass:
         self.var_cat_id=StringVar()
         self.var_name=StringVar()
         #--------------- title ---------------------
+        #this uses pack so cant use helper function
         lbl_title=Label(self.root,text="Manage Product Category",font=("goudy old style",30),bg="#184a45",fg="white",bd=3,relief=RIDGE).pack(side=TOP,fill=X,padx=10,pady=20)
         
         createLabel(self.root,"Enter Category Name", 50, 100, font_size=30)
-        txt_mame=Entry(self.root,textvariable=self.var_name,bg="lightyellow",font=("goudy old style",18)).place(x=50,y=170,width=300)
+        createEntry(self.root, self.var_name, 50, 170, width=300, font_size=18)
 
         createButton(self.root, "ADD", self.add, "#4caf50", 360, 170, 150, 30)
         createButton(self.root, "Delete", self.delete, "red", 520, 170, 150, 30)
@@ -30,9 +31,7 @@ class categoryClass:
             ("name", "Name", 100)
         ]
         
-        cat_frame, self.CategoryTable = createTableWithScrollbars(
-            self.root, ("cid", "name"), 700, 100, width=380, height=100
-        )
+        cat_frame, self.CategoryTable = createTableWithScrollbars(self.root, ("cid", "name"), 700, 100, width=380, height=100)
         
         configureTableColumns(self.CategoryTable, columns_config, self.get_data)
         self.show()
