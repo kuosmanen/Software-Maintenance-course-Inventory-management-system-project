@@ -17,12 +17,30 @@ def create_db():
             "+358999999999",
             "01/01/2000",
             "28/02/2026",
-            "123456789", #this is the password
+            "123456", #this is the password
             "Admin",
             "My house",
             "999999"
         ))
         con.commit()
+
+    #adding an employee user for testing
+    cur.execute("SELECT * FROM employee WHERE email=?",( "employee@employee.com",))
+    if not cur.fetchall():
+        cur.execute("INSERT INTO employee(name,email,gender,contact,dob,doj,pass,utype,address,salary) VALUES(?,?,?,?,?,?,?,?,?,?)",(
+            "Employee",
+            "employee@employee.com",
+            "Other",
+            "+358888888888",
+            "01/01/2010",
+            "28/02/2026",
+            "123456", #same password
+            "Employee",
+            "Their house",
+            "5000"
+        ))
+        con.commit()
+
 
     cur.execute("CREATE TABLE IF NOT EXISTS supplier(invoice INTEGER PRIMARY KEY AUTOINCREMENT,name text,contact text,desc text)")
     con.commit()

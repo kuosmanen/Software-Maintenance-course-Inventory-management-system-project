@@ -74,14 +74,15 @@ This project includes 10 python scripts that demonstrate how to interact with a 
 1. Click on the `create_db.py` file first and run it.
 2. Click on the `login.py` file and run it.
 3. Login with the admin credentials: 
-- Email: admin@admin.com
+- Email: admin@admin.com or employee@employee.com
 - Password: 123456
-4. Click on the `employee button` to add employees.
-5. Click on the `supplier button` to add suppliers.
-6. Click on the `products button` to add products.
-7. Now click on the `billing.py` file for billing.
-8. Now click on the `dashboard.py` file and run it.
-9. Click on the `sales` button to see your billing.
+4. Admins can access the dashboard but both admins and employees can access billing
+
+If you chose dashboard:
+5. Click on the `employee button` to add employees.
+6. Click on the `supplier button` to add suppliers.
+7. Click on the `products button` to add products.
+8. Click on the `sales` button to see your billing.
 
 
 ### Pre-Requisites

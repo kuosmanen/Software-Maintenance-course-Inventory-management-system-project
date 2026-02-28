@@ -417,8 +417,3 @@ class billClass:
             os.startfile(new_file,'print')
         else:
             messagebox.showinfo("Print","Please generate bill to print the receipt",parent=self.root)
-
-if __name__=="__main__":
-    root=Tk()
-    obj=billClass(root)
-    root.mainloop()

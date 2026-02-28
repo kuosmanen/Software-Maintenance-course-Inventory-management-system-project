@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 import sqlite3
 import dashboard
+import billing
 from helper_functions import createLabel, createEntry, createButton
 
 class Login_System:
@@ -14,6 +15,8 @@ class Login_System:
         #Variables
         self.var_email = StringVar()
         self.var_password = StringVar()
+        self.var_destination = StringVar()
+        self.var_destination.set("Billing")#Default is billing
         
         #Login Frame
         login_frame = Frame(self.root, bg="white")
@@ -30,6 +33,29 @@ class Login_System:
         createLabel(login_frame, "Password", 200, 210, bg="white", fg="gray", bold=True)
      
         createEntry(login_frame, self.var_password, 200, 250, width=400, height=35, font="times new roman", bg="lightgray")
+        
+        #Destination Selection
+        createLabel(login_frame, "Open:", 200, 290, bg="white", fg="gray", bold=True)
+        
+        rb_billing = Radiobutton(
+            login_frame,
+            text="Billing",
+            variable=self.var_destination,
+            value="Billing",
+            font=("times new roman", 13),
+            bg="white"
+        )
+        rb_billing.place(x=280, y=290)
+
+        rb_dashboard = Radiobutton(
+            login_frame,
+            text="Dashboard",
+            variable=self.var_destination,
+            value="Dashboard",
+            font=("times new roman", 13),
+            bg="white"
+        )
+        rb_dashboard.place(x=440, y=290)
         
         #Login Button
         createButton(login_frame, "Log In", self.login, "light blue", 310, 320, 180, 40, font="times new roman", fg="white")
@@ -51,11 +77,32 @@ class Login_System:
             if row is None:
                 messagebox.showerror("Error", "Invalid email or password", parent=self.root)
             else:
-                #Success!!
+                #getting the user type (index 8 in the row)
+                utype = row[8]
+                
+                #checking access permissions
+                #Admin can access both dashboard and billing, employee can only access billing
+                selected_destination = self.var_destination.get()
+                
+                if selected_destination =="Dashboard" and utype != "Admin":
+                    messagebox.showerror(
+                        "Access Denied",
+                        f"Access to the dashboard is restricted to Admin users only!",
+                        parent=self.root
+                    )
+                    return
+                
+                #Success!! user has permission
                 messagebox.showinfo("Login", "Login successful!")
-                #Closing the login window and opening dashboard
+                
+                #Closing the login window and opening the selected destination
                 self.root.destroy()
-                self.open_dashboard()
+                
+                if selected_destination == "Dashboard":
+                    self.open_dashboard()
+                else:
+                    self.open_billing()
+                    
                 con.close()
                     
         except Exception as ex:
@@ -70,6 +117,12 @@ class Login_System:
     def open_dashboard(self):
         root = Tk()
         obj = dashboard.IMS(root)
+        root.mainloop()
+    
+    #Opening billing after successful login
+    def open_billing(self):
+        root = Tk()
+        obj = billing.billClass(root)
         root.mainloop()
 
 
