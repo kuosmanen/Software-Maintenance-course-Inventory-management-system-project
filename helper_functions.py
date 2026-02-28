@@ -56,3 +56,18 @@ def configureTableColumns(table, columns_config, bind):
 
     table.pack(fill=BOTH,expand=1)
     table.bind("<ButtonRelease-1>",bind)
+
+
+
+
+#Logout closes the current window and opens login
+def logout(current_window):
+    #importing here to avoid circular imports error
+    from tkinter import Tk, messagebox
+    import login
+    
+    messagebox.showinfo("Logout", "Logout successful!")
+    current_window.destroy()
+    root = Tk()
+    obj = login.Login_System(root)
+    root.mainloop()

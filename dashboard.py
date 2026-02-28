@@ -11,6 +11,8 @@ from category import categoryClass
 from product import productClass
 from sales import salesClass
 
+from helper_functions import logout, createButton
+
 # ------------------ BASE PATH SETUP ------------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 IMAGE_DIR = os.path.join(BASE_DIR, "images")
@@ -41,11 +43,7 @@ class IMS:
         ).place(x=0, y=0, relwidth=1, height=70)
 
         # ------------ logout button -----------
-        btn_logout = Button(
-            self.root, text="Logout",
-            font=("times new roman", 15, "bold"),
-            bg="yellow", cursor="hand2"
-        ).place(x=1150, y=10, height=50, width=150)
+        createButton(self.root, "Logout", lambda: logout(self.root), "yellow", 1150, 10, 150, 50, font="times new roman", bold=True, fg="black")
 
         # ------------ clock -----------------
         self.lbl_clock = Label(
@@ -170,10 +168,4 @@ class IMS:
             self.lbl_clock.after(200, self.update_content)
 
         except Exception as ex:
-            messagebox.showerror("Error", f"Error due to : {str(ex)}", parent=self.root)
-
-
-if __name__ == "__main__":
-    root = Tk()
-    obj = IMS(root)
-    root.mainloop()
+            pass

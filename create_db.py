@@ -5,6 +5,25 @@ def create_db():
     cur=con.cursor()
     cur.execute("CREATE TABLE IF NOT EXISTS employee(eid INTEGER PRIMARY KEY AUTOINCREMENT,name text,email text,gender text,contact text,dob text,doj text,pass text,utype text,address text,salary text)")
     con.commit()
+
+    #adding a default admin user
+    #passwords are in plain text because they are also so in the original employee table
+    cur.execute("SELECT * FROM employee WHERE email=?",( "admin@admin.com",))
+    if not cur.fetchall():
+        cur.execute("INSERT INTO employee(name,email,gender,contact,dob,doj,pass,utype,address,salary) VALUES(?,?,?,?,?,?,?,?,?,?)",(
+            "Admin",
+            "admin@admin.com",
+            "Other",
+            "+358999999999",
+            "01/01/2000",
+            "28/02/2026",
+            "123456789", #this is the password
+            "Admin",
+            "My house",
+            "999999"
+        ))
+        con.commit()
+
     cur.execute("CREATE TABLE IF NOT EXISTS supplier(invoice INTEGER PRIMARY KEY AUTOINCREMENT,name text,contact text,desc text)")
     con.commit()
     cur.execute("CREATE TABLE IF NOT EXISTS category(cid INTEGER PRIMARY KEY AUTOINCREMENT,name text)")

@@ -5,7 +5,7 @@ import sqlite3
 import time
 import os
 import tempfile
-from helper_functions import createLabel, createEntry, createButton, createTableWithScrollbars, configureTableColumns
+from helper_functions import createLabel, createEntry, createButton, createTableWithScrollbars, configureTableColumns, logout
 
 class billClass:
     def __init__(self,root):
@@ -21,7 +21,7 @@ class billClass:
         title=Label(self.root,text="Inventory Management System",image=self.icon_title,compound=LEFT,font=("times new roman",40,"bold"),bg="#010c48",fg="white",anchor="w",padx=20).place(x=0,y=0,relwidth=1,height=70)
 
         #------------ logout button -----------
-        createButton(self.root, "Logout", None, "yellow", 1150, 10, 150, 50, font="times new roman", bold=True, fg="black")
+        createButton(self.root, "Logout", lambda: logout(self.root), "yellow", 1150, 10, 150, 50, font="times new roman", bold=True, fg="black")
 
         #------------ clock -----------------
         self.lbl_clock=Label(self.root,text="Welcome to Inventory Management System\t\t Date: DD:MM:YYYY\t\t Time: HH:MM:SS",font=("times new roman",15),bg="#4d636d",fg="white")
