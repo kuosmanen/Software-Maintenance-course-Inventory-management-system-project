@@ -108,6 +108,9 @@ class Login_System:
         except Exception as ex:
             messagebox.showerror("Error", f"Error due to : {str(ex)}", parent=self.root)
             con.close()
+        finally:
+            #COnnection should always be closed
+            con.close()
             
     
 
