@@ -6,6 +6,18 @@ from tkinter import Tk, END
 from supplier import supplierClass
 from create_db import create_db
 
+"""
+The regression tests in this file test basic CRUD functionality of the supplier.py file.
+More regression tests could be implemented for all the other python files by following the same kind of format as in test_supplier.py.
+The following tests were implemented to test supplier.py: 
+
+Test 1: Adding a new supplier works 
+Test 2: Adding a supplier with the same invoice as a previous supplier should fail 
+Test 3: Updating a supplier works 
+Test 4: Deleting a supplier works 
+Test 5: Searching for a supplier (by invoice number) works 
+"""
+
 
 class TestSupplier(unittest.TestCase):
     
